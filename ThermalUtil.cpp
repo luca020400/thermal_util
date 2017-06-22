@@ -76,7 +76,19 @@ int GetMaxValueFromThermalZone()
             LOG(WARNING) << "Failed to parse integer in " << content;
             continue;
         }
+
+        // Safe to assume temp are always >10 and <100
+        if (temperature / 10000 > 10)
+            temperature /= 10000;
+        if (temperature / 1000 > 10)
+            temperature /= 1000;
+        if (temperature / 100 > 10)
+            temperature /= 100;
+        if (temperature / 10 > 10)
+            temperature /= 10;
+
         LOG(INFO) << path << " : " << temperature;
+
         max_temperature = std::max(temperature, max_temperature);
     }
     return max_temperature;
@@ -84,7 +96,7 @@ int GetMaxValueFromThermalZone()
 
 int main()
 {
-    printf("%.2f C°\n", GetMaxValueFromThermalZone() / 1000.0f);
+    printf("%d C°\n", GetMaxValueFromThermalZone());
 
     return 0;
 }
